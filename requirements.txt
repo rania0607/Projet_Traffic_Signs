@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+Flask-Login
+tensorflow-cpu
+Pillow
+numpy
+gunicorn

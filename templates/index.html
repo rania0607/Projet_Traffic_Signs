@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Accueil - Analyse{% endblock %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-lg-2 d-none d-lg-block">
+        <div class="sidebar-signs">
+            <div class="fake-sign sign-stop">STOP</div>
+            <div class="fake-sign sign-warning">!</div>
+            <div class="fake-sign sign-speed">30</div>
+        </div>
+    </div>
+
+    <div class="col-lg-8 col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-body p-5">
+                <h2 class="card-title mb-4">Télécharger une image de panneau</h2>
+                <p class="card-text">Veuillez choisir une image (JPG, PNG) à analyser.</p>
+                
+                <form action="/predict" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="imagefile" class="form-label">Choisir une image:</label>
+                        <input type="file" class="form-control" id="imagefile" name="imagefile" accept="image/*" required>
+                    </div>
+                    <div class="d-grid">
+                        <input type="submit" value="Analyser l'image" class="btn btn-danger btn-lg">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 d-none d-lg-block">
+        <div class="sidebar-signs">
+            <div class="fake-sign sign-direction">→</div>
+            <div class="fake-sign sign-speed">80</div>
+            <div class="fake-sign sign-warning">🚲</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+<!-- Hada l'fichier li fih l'formulaire dyal "Choisir une image" w l'bouton "Analyser".
+
+Fih l'design dyal les panneaux f jnab. -->

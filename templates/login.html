@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<div class="row align-items-center" style="min-height: 80vh;">
+    
+    <div class="col-md-3 d-none d-md-flex justify-content-end">
+        <div class="traffic-light-container">
+            <div class="traffic-light">
+                <div class="light red"></div>
+                <div class="light yellow"></div>
+                <div class="light green"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body p-5">
+                <h2 class="card-title text-center mb-4">Connexion</h2>
+                <form method="POST" action="/login">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="d-grid">
+                        <input type="submit" value="Se connecter" class="btn btn-primary btn-lg">
+                    </div>
+                </form>
+                <p class="mt-3 text-center">Pas encore de compte? <a href="{{ url_for('register') }}">S'inscrire</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 d-none d-md-block">
+        </div>
+
+</div>
+{% endblock %}
+
+<!-- (L'Page dyal L'Connexion)
+
+Hada l'fichier li fih l'formulaire dyal "Nom d'utilisateur" w "Mot de passe".
+
+Fih l'design dyal l'feu rouge f jnb. -->

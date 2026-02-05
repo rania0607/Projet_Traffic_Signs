@@ -1,0 +1,154 @@
+/* style.css */
+
+body {
+    background-color: #f0f2f5; /* Un gris très clair, comme l'asphalte */
+}
+
+/* L'Menu l'fouq (k7l bhal tri9) */
+.navbar.bg-dark {
+    background-color: #212529 !important; /* Un noir/gris foncé */
+}
+
+/* Les "cartes" (fin radi ndiro les formulaires) */
+.card {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+}
+
+/* L'bouton l'asli (bhal l'panneau dyal l'information) */
+.btn-primary {
+    background-color: #0056b3; /* Bleu foncé */
+    border-color: #0056b3;
+}
+.btn-primary:hover {
+    background-color: #004494;
+    border-color: #004494;
+}
+
+/* L'bouton dyal "S'inscrire" (bhal panneau "Permis") */
+.btn-success {
+    background-color: #28a745; /* Vert */
+    border-color: #28a745;
+}
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #218838;
+}
+
+/* L'bouton dyal "Analyser" (bhal panneau "Stop/Danger") */
+.btn-danger {
+    background-color: #dc3545; /* Rouge */
+    border-color: #dc3545;
+}
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+}
+
+/* N'kbro l'icône dyal l'panneau f l'menu chwiya */
+.navbar-brand {
+    font-size: 1.5rem; /* 1.5 fois la taille normale */
+}
+/* ======== AJOUT POUR LA BARRE LATÉRALE (SIDEBAR) ======== */
+
+/* La colonne latérale où il y aura les panneaux */
+.sidebar-signs {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* Espace entre les panneaux */
+    opacity: 0.6; /* Les rendre un peu transparents pour ne pas distraire */
+}
+
+/* Le style de base pour un faux panneau */
+.fake-sign {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.8rem;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+/* Panneau STOP (Rouge) */
+.sign-stop {
+    background-color: #dc3545;
+    border-radius: 15%; /* On triche un peu sur la forme octogonale */
+    font-size: 1.5rem;
+}
+
+/* Panneau Limite de Vitesse (Cercle) */
+.sign-speed {
+    background-color: white;
+    border-radius: 50%;
+    border: 6px solid #dc3545;
+    color: #333;
+}
+
+/* Panneau Direction (Bleu) */
+.sign-direction {
+    background-color: #0056b3;
+    border-radius: 50%;
+    font-size: 2.5rem; /* Taille de la flèche */
+}
+
+/* Panneau Avertissement (Jaune) */
+.sign-warning {
+    background-color: #ffc107; /* Jaune */
+    color: #333;
+    border-radius: 15%; /* Carré avec coins arrondis */
+    font-size: 2.5rem; /* Taille du '!' */
+}
+/* ======== AJOUT POUR PAGE LOGIN/REGISTER ======== */
+
+/* Le "poteau" dyal l'feu rouge */
+.traffic-light-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* L'boîtier dyal l'feu rouge (k7l) */
+.traffic-light {
+    width: 90px;
+    height: 250px;
+    background-color: #2b2b2b; /* Noir/Gris foncé */
+    border-radius: 20px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    border: 4px solid #1a1a1a;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* L'daw (l'bola) */
+.traffic-light .light {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background-color: #4d4d4d; /* Couleur éteinte (par défaut) */
+    border: 2px solid #000;
+    box-shadow: inset 0 -2px 5px rgba(0,0,0,0.3);
+}
+
+/* Nch3lo l'dawaw (b l'alwan dyalna) */
+.traffic-light .light.red {
+    background-color: #dc3545; /* Rouge (Stop) */
+    box-shadow: 0 0 20px #dc3545, inset 0 -2px 5px rgba(0,0,0,0.3);
+}
+.traffic-light .light.yellow {
+    background-color: #ffc107; /* Jaune */
+    box-shadow: 0 0 20px #ffc107, inset 0 -2px 5px rgba(0,0,0,0.3);
+}
+.traffic-light .light.green {
+    background-color: #28a745; /* Vert (Go) */
+    box-shadow: 0 0 20px #28a745, inset 0 -2px 5px rgba(0,0,0,0.3);
+}

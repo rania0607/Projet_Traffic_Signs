@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Résultat de l'Analyse{% endblock %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-lg-2 d-none d-lg-block">
+        <div class="sidebar-signs">
+            <div class="fake-sign sign-stop">STOP</div>
+            <div class="fake-sign sign-warning">!</div>
+            <div class="fake-sign sign-speed">30</div>
+        </div>
+    </div>
+
+    <div class="col-lg-8 col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-header text-white" style="background-color: #0056b3;">
+                <h3 class="mb-0">Résultat de l'Analyse</h3>
+            </div>
+            <div class="card-body text-center p-4">
+                
+                <h2 class="display-6 text-primary mb-3">{{ prediction }}</h2>
+                <p class="lead"><strong>Confiance:</strong> {{ confidence }} %</p>
+                <hr>
+
+                <h4 class="mt-4">Votre image:</h4>
+                <img src="{{ image_path }}" alt="Image uploadée" class="img-fluid rounded border my-3" style="max-height: 400px;">
+                
+                <p class="text-muted small">Heure de l'analyse: {{ time }}</p>
+
+                <a href="/" class="btn btn-secondary btn-lg mt-3">Analyser une autre image</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 d-none d-lg-block">
+        <div class="sidebar-signs">
+            <div class="fake-sign sign-direction">→</div>
+            <div class="fake-sign sign-speed">80</div>
+            <div class="fake-sign sign-warning">🚲</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+<!-- (L'Page dyal Natija)
+
+Hada l'fichier li kayban mor l'analyse.
+
+Fih l'code li kay'affichi soura, l'prediction (bhal "Stop"), w l'confidence -->
