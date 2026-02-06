@@ -1,23 +1,31 @@
 import os
 import datetime
 import numpy as np
-from flask import Flask, render_template, request, url_for, redirect, flash, render_template
+from flask import Flask, render_template, request, url_for, redirect, flash
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func 
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from tensorflow.keras.models import load_model
 from PIL import Image
+
+# --- OPTIMIZATION DIAL L-RAM L RENDER ---
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+import tensorflow as tf
+# Bach TensorFlow may-khnaqch l-server fabor
+tf.config.threading.set_inter_op_parallelism_threads(1)
+tf.config.threading.set_intra_op_parallelism_threads(1)
+
+from tensorflow.keras.models import load_model
 
 # --- CONFIGURATION ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'votre_cle_secrete_nadi_2026'
 
-# Configuration dial l-base de données bach t-khdem f Render o f l-local
+# DB Config bach t-khdem f Render o f l-local
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(BASE_DIR, 'predictions.db'))
-if app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
+if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
     app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -53,9 +61,15 @@ class Prediction(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --- IA MODEL ---
+# --- IA MODEL (Lazy Loading bach may-crashich l-app f l-bidayya) ---
 MODEL_PATH = os.path.join(BASE_DIR, 'model_traffic_signs.h5')
-model = load_model(MODEL_PATH)
+model = None
+
+def get_model():
+    global model
+    if model is None:
+        model = load_model(MODEL_PATH)
+    return model
 
 classes = {
     0: "Limite 20", 1: "Limite 30", 14: "Stop", 13: "Cédez le passage", 
@@ -108,11 +122,19 @@ def index():
 @app.route('/predict', methods=['POST'])
 @login_required
 def predict():
+    if 'imagefile' not in request.files:
+        flash("Aucun fichier sélectionné", "danger")
+        return redirect(url_for('index'))
+        
     f = request.files['imagefile']
     filename = secure_filename(f.filename)
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     f.save(file_path)
-    pred = model.predict(preprocess(file_path))
+    
+    # Chargement dial model ghir melli n-7tajouh
+    curr_model = get_model()
+    pred = curr_model.predict(preprocess(file_path))
+    
     res, conf = classes.get(np.argmax(pred), "Inconnu"), round(float(np.max(pred)) * 100, 2)
     new_p = Prediction(result=res, confidence=conf, image_name=filename, 
                        timestamp=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), author=current_user)
@@ -120,7 +142,6 @@ def predict():
     db.session.commit()
     return render_template('result.html', prediction=res, confidence=conf, image_path=url_for('static', filename='uploads/'+filename))
 
-# --- DASHBOARD UPDATE (Tashih dial l-moshkil dial l-grouping) ---
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -128,18 +149,22 @@ def dashboard():
     user_total = Prediction.query.filter_by(user_id=u_id).count()
     global_total = Prediction.query.count()
     
-    # Tashih dial top_signs
-    top_signs = db.session.query(Prediction.result, func.count(Prediction.result)).filter(Prediction.user_id == u_id).group_by(Prediction.result).limit(5).all()
+    # Tashih dial l-moshkil dial l-grouping
+    top_signs_query = db.session.query(Prediction.result, func.count(Prediction.result)).filter(Prediction.user_id == u_id).group_by(Prediction.result).limit(5).all()
     
-    # Tashih dial evo_data (SQL-friendly format)
     date_label = func.substr(Prediction.timestamp, 1, 10)
-    evo_data = db.session.query(date_label, func.count(Prediction.id)).filter(Prediction.user_id == u_id).group_by(date_label).all()
+    evo_data_query = db.session.query(date_label, func.count(Prediction.id)).filter(Prediction.user_id == u_id).group_by(date_label).all()
     
-    return render_template('dashboard.html', username=current_user.username, user_total=user_total, 
-                           global_total=global_total, labels=[r[0] for r in top_signs], values=[r[1] for r in top_signs],
-                           evo_labels=[r[0] for r in evo_data], evo_values=[r[1] for r in evo_data])
+    return render_template('dashboard.html', 
+                           username=current_user.username, 
+                           user_total=user_total, 
+                           global_total=global_total, 
+                           labels=[r[0] for r in top_signs_query], 
+                           values=[r[1] for r in top_signs_query],
+                           evo_labels=[r[0] for r in evo_data_query], 
+                           evo_values=[r[1] for r in evo_data_query])
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
